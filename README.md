@@ -1,4 +1,4 @@
-# tgglobal.gihub.io
+# tgglobal coding guidelines
 
 # **命名規則**
 
