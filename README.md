@@ -30,7 +30,6 @@
 1. [クラス](#クラス)  
 1. [まとめ](#まとめ)  
 
-
 # **命名規則**
 
 変数、定数、関数などにつける名前を、**識別子**といいます。
@@ -443,8 +442,283 @@ const sheet = SpreadsheetApp.getActiveSheet();
 
 また、グローバル領域で宣言した（**グローバル変数**）は全ての関数からアクセスすることができ、変更を加えることもできます。
 
-望まない影響を受ける可能性があるので、極力使わないようにしましょう。
+望まない影響を受ける可能性があるので、極力使わないようにしましょう。  
 
 # **クラス**
+
+## ドキュメンテーションコメントを付ける
+
+ドキュメンテーションコメントは、`//`（ダブルスラッシュ）ではなく、`/** */`を使います。
+
+下記のように、関数やメソッドには、必ずドキュメンテーションコメントをつけます。1行で書けるときは、1行で、パラメータやリターンがあるときは、改行して書きましょう。
+
+```jsx
+/** カスタムクラスは○○データを操作します */
+class CustomDate {
+
+  /** コンストラクタ
+		* @param{string} スプレッドシートid
+		* @param{string} シート名
+		*/
+  constructor(id,sheetName) {
+    this.sheet = SpreadsheetApp.openById('id').getSheetByName('sheetName');
+  }
+
+  /** オリジナルデータを返すメソッド
+		* @return{Array} values
+		*/
+  getOriginalDate() {
+		//処理
+    return values;
+  }
+
+}
+
+/** テスト関数　*/
+function myFunction() {
+
+const c = CustomDate();
+c.getOriginalDate();
+
+}
+```
+
+- 関数は主に3種類です。名前の使い分けをちゃんとすると、書くときも楽になります。
+    - コンストラクタ・・・クラスで定義される、生成されるオブジェクトのプロパティを定義する関数
+    - メソッド・・・クラス内に書かれる関数
+    - 関数・・・それ以外の関数
+
+## メソッドは純粋関数にする
+
+メソッドは、引数を受け取って、戻り値を返すのが正常なふるまいです。なので、メソッドの中では、戻り値を返す、以外のことは極力しないほうがいいです。
+
+たとえば、getOriginalDate()メソッドは、引数になにかを受け取り（引数が不要なばあいもあります。）、戻り値でvaluesや、objArrayを返すことを期待します。
+
+メソッドをシンプルに、戻り値を返すだけの関数を「純粋関数」と呼びます。
+
+途中でconsole.log()を出力するようなメソッドも、純粋関数とは呼べません。
+
+メソッドを純粋関数にする理由は、メソッドを呼び出す側からしたら、**予測不能な動きをされる**と困るからです。
+
+```jsx
+  getOriginalDate() {
+		//処理
+		console.log(values);
+		//処理    
+		return values;
+  }
+```
+
+呼び出し側はきっと、クラスのインスタンスを生成して、メソッドを呼び出すと思います。期待した動きだけをすることを期待します。
+
+```jsx
+const c = new CustomDate();
+const values = c.getOriginalDate();
+```
+
+なので、メソッドを作成するときは、まず、戻り値から書きます。
+
+```jsx
+ getOriginalDate() {
+
+		return values;
+  }
+```
+
+次に、戻り値を、変数宣言します。
+
+```jsx
+ getOriginalDate() {
+		const values = 'hoge';
+		return values;
+  }
+```
+
+このような順番で書くと、なにを書かなければならないのか、コードを書きながら整理できます。
+
+## 必要なものから表示する（不要なものは下に書く）
+
+スクリプトファイルは、上から読みます。なので、必要なものほど、上に書きましょう。
+
+逆に、外からは直接呼び出されない、**メソッドの中でしか呼ばれないメソッド**はプライベート関数化（メソッド名の後ろにアンダースコアを）します。
+
+```jsx
+/** ソートされたValuesをメソッド
+	* @return {Array} values
+	*/ 
+getOriginalDate() {
+		const values = 'hoge';
+		const sortValues = this.sortValues_();
+		return sortValues;
+  }
+
+/** ソートするメソッド
+	* @return {Array} values
+	*/
+sortValues_(values){
+	//sort処理 values.sort();
+	return values
+	}
+
+```
+
+そして、**プライベート関数は、できるだけ下部に置きます**。コードを読む人にとっては、重要度は低いからです。
+
+## テスト関数を作成する
+
+クラスを作成したら、クラスが正常に動くか、テスト関数を作成します。全てのプロパティとメソッドをテストする関数を書く必要はありませんが、重要なメンバーは、テスト関数を書いておくと、後で読む人（自分自身も含む）が助かります。
+
+### テスト関数の位置
+
+テスト関数は、クラスが書かれている同じスクリプトファイルの、最下部に書きます。（原則として、１スクリプトファイル、1クラスです）
+
+テスト関数の名前は、**test + クラス名**です。そして、テスト関数は、**実行用関数ではありません**。「テスト関数」と呼ぶようにしてください。
+
+```jsx
+/** カスタムクラスは○○データを操作します */
+class CustomDate {
+
+  /** コンストラクタ
+    * @param{string} スプレッドシートid
+    * @param{string} シート名
+    */
+  constructor(id, sheetName) {
+    this.sheet = SpreadsheetApp.openById('id').getSheetByName('sheetName');
+  }
+
+  /** ソートされたValuesをメソッド
+    * @return {Array} values
+    */
+  getOriginalDate() {
+    const values = 'hoge';
+    const sortValues = this.sortValues_();
+    return sortValues;
+  }
+
+  /** ソートするメソッド
+    * @return {Array} values
+    */
+  sortValues_(values) {
+    //sort処理 values.sort();
+    return values
+  }
+
+}
+
+/** テスト関数　*/
+function testCustomDate() {
+
+//test処理
+
+}
+```
+
+### テスト関数の中身
+
+では、テスト関数の中身を見てみましょう。
+
+クラスは、オブジェクト（インスタンス）を生成する機能なので、以下の3点をテストします。
+
+- [インスタンスの確認](#インスタンスの確認)
+- [プロパティの確認](#プロパティの確認)
+- [メソッドの確認](#メソッドの確認)
+
+### インスタンスの確認
+インスタンスは、必ず変数に代入しましょう。クラス名の先頭の小文字（1文字か、2文字）を使うことが多いです。
+インスタンスをコンソールログで確認すると、プロパティを確認できますが、目で確認してもしょうがないので、ここではインスタンスを生成するだけでもいいでしょう。
+
+```jsx
+/** テスト関数　*/
+function testCustomDate() {
+
+const cd = new CustomDate();
+console.log(cd);
+
+}
+```
+
+### プロパティの確認
+クラスに必要なプロパティが決まっているなら、プロパティを確認するコードを書きます。
+この例でいくと、正しくプロパティを取得できているなら、スプレッドシートのシートオブジェクトを取得できているはずですので、このようなテストが可能です。
+
+```jsx
+/** テスト関数　*/
+function testCustomDate() {
+const cd = new CustomDate('SSID', '変更記録');
+const id = cd.id;
+const sheetName = cd.sheetName;
+const sheet = SpreadsheetApp.openById(id).getSheetByName(sheetName);
+if(sheet.getName() === '変更記録') console.log('プロパティは問題ありません');
+
+}
+```
+
+### メソッドの確認
+メソッドも同様に、戻り値をテストします。
+メソッドが純粋関数であれば、テストも楽です。
+
+```jsx
+/** テスト関数　*/
+function testCustomDate() {
+const cd = new CustomDate('SSID', '変更記録');
+const values = cd.getOriginalDate();
+//ソートされているかテスト
+if(values[1][2] < values[2][2] < values[3][2]) console.log('ソートされています'); ;
+}
+```
+
+このようなテスト関数を用意するということは、**テスト関数から書き始める**ということもできます。
+
+### テスト駆動開発
+
+テスト関数から書き始める手法をTDD（テスト駆動開発）と呼びます。むずかしくありません。
+必要なメソッドや、クラスの構造がイメージできたら（作図をオススメします）、まず、テスト関数を言葉で書きます。
+
+```jsx
+/** テスト関数　*/
+function testCustomDate() {
+//インスタンスを生成する
+//プロパティの取得
+//プロパティの確認
+//valuesを取得するメソッド
+//2次元配列を渡すと、B列で昇順ソートするメソッド
+}
+```
+
+この日本語を、コードにしてみます。
+
+```jsx
+/** テスト関数　*/
+function testCustomDate() {
+
+//インスタンスを生成する
+const cd = new CustomDate('SSID', 'シート名');
+
+//プロパティの取得
+const id = cd.id;
+const sheetName = cd.sheetName;
+
+//プロパティの確認
+const sheet = SpreadsheetApp.openById(id).getSheetByName(sheetName);
+if(sheet.getName() === '変更記録') console.log('プロパティは問題ありません');
+
+//valuesを取得するメソッド
+const values = cd.getOriginalDate();
+
+//2次元配列を渡すと、B列で昇順ソートするメソッド
+const array = [['a',100],['b',200],['c',150]]
+const sortValues = cd.sortValues_(array);
+if(sortValues[0][2] < sortValues[1][2] < sortValues[2][2]) {
+	console.log('ソートされています'); 
+}
+
+}
+```
+
+テスト関数が完成したら、クラスを書き始めます。
+テスト関数が問題なければ、クラスの中身はあまりとやかく言うものではありません。例えば、変数宣言のconst, letなど、社内ルールで統一するのは、むずかしいです。
+むしろ、そのような細かいミスの確認にコストを掛けるより、**テスト関数が正しく動いているか**、にチーム全員がフォーカスした方がいいでしょう。
+以上で、クラスを作り終わったら確認して欲しいことでした。「作り終わったら」と書きましたが、実はいちばん最初に読んで欲しいマニュアルになりました。
+
 
 # **まとめ**
