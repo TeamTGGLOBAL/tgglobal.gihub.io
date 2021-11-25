@@ -107,6 +107,12 @@
 - threads
 - events
 
+TGでは、スプレッドシートの行のデータを**record**と呼びます。複数行ならrecordsです。
+
+行で表現できない、複数セルや、配列などのなにかの要素の集まりは、**values**と呼びます。
+
+あまりむずかしく考える必要はありませんが、変数定義をして代入するものが「行」のときは、必ずrecordsを使いましょう。
+
 ### **関数名**
 
 関数名も**アルファベットのキャメル記法**で書きます。
@@ -152,8 +158,6 @@ const USER_ID = 'hogehoge';
 
 GASでは**プロパティストア**に、プロジェクトやドキュメントに紐付く形でデータを格納しておくことができます。
 
-![https://tonari-it.com/wp-content/uploads/010-property-store-680x255.png](https://tonari-it.com/wp-content/uploads/010-property-store-680x255.png)
-
 ファイルのIDや外部と接続するために必要な情報を**スクリプトから分離して安全に管理**することができます。
 
 プロパティストアにはいくつか種類がありますが
@@ -163,12 +167,6 @@ GASでは**プロパティストア**に、プロジェクトやドキュメン�
 - 実行ユーザーに紐づくデータ：ユーザープロパティ
 
 という使い分けをします。
-
-**[Google Apps Scriptで実行したユーザーごとのスプレッドシートを新規作成する**ユーザーごとのスプレッドシートを作ってそのIDを管理する必要があるなら、ユーザープロパティを使うと便利です。今回は、GASでユーザーごとのスプレッドシートを作成してユーザープロパティで管理する方法です。tonari-it.com2017.12.22](https://tonari-it.com/gas-user-property/)
-
-![https://tonari-it.com/wp-content/uploads/store.jpg](https://tonari-it.com/wp-content/uploads/store.jpg)
-
-[https://www.google.com/s2/favicons?domain=tonari-it.com](https://www.google.com/s2/favicons?domain=tonari-it.com)
 
 # **コードのフォルム**
 
@@ -180,7 +178,7 @@ GASでは自動でステートメントの末尾が判別されますが、判�
 
 ### **ネストとインデント**
 
-ネストであれば必ずその深さの分のインデントを加えてください。理想としては深さは3つまでがいいですね。
+新IDEになってから、オートフォーマットができるようになりました。インデントやスペースを自動で綺麗にしてくれる機能です。
 
 ```
 functionmyFunction1() {
@@ -194,41 +192,9 @@ continue;
 
 ```
 
-インデントをそろえる場合は、Shift + Tab キー活用すると、自動でそろえてくれます。
+オートフォーマットのショートカットキーはAlt + Shift + Fです。**オートフォーマットは必ず**行って下さい。
 
-**複数の行を選択しても、GASが判断して整形してくれる**ので、大変便利です。
-
-### **縦に揃える**
-
-一行が長いときには、縦に揃えることを意識すると可読性が高まります。
-
-長いメッセージを生成するときや
-
-```
-let body = "";
-body += "[info]n";
-body += values[row][0] + "n[hr]";
-body += values[row][1] + "n(";
-body += values[row][2] + ")[/info]";
-
-```
-
-オブジェクトや配列のリテラルを記述するときなどに有効です。
-
-```
-functionmyFunction() {
-const person = {
-    name : 'Bob',
-    age : 25,
-    sex : 'male',
-    job : 'Engineer'
-  };
-  console.log(person.name);
-}
-
-```
-
-状況によって、使い分けてください。
+オートフォーマットは、**行の選択は不要です**。
 
 # **コメント**
 
@@ -275,6 +241,8 @@ return price * (1 + TAX_RATE);
 ### **「//」によるコメントを優先**
 
 Ctrl + / で、現在カーソルのある行や**複数行の選択範囲をコメントイン、コメントアウトできる**ので、「/* ～ */」によるコメントよりも「//」を優先して使用します。
+
+クラスやコンストラクタやメソッドに対するコメントは、**クラスの章**を参照してください。
 
 # **比較演算子**
 
@@ -328,12 +296,6 @@ for(let i = 1; i < values.length; i++){
 
 ```
 
-**[Google Apps Scriptのスプレッドシート読み書きを格段に高速化をする方法**Google Apps Scriptでスプレッドシートの操作をしていて実行速度が遅い！と感じたことがあると思います。今回はスプレッドシートを操作する場合に処理速度を格段に速くする方法をお伝えします。tonari-it.com2016.04.05](https://tonari-it.com/gas-spreadsheet-speedup/)
-
-![https://tonari-it.com/wp-content/uploads/speed-2.jpg](https://tonari-it.com/wp-content/uploads/speed-2.jpg)
-
-[https://www.google.com/s2/favicons?domain=tonari-it.com](https://www.google.com/s2/favicons?domain=tonari-it.com)
-
 **最終行**はgetLastRowメソッドで取得することができますが、配列での処理を優先しましょう。
 
 ```
@@ -346,12 +308,6 @@ for(let i = 2; i <= lastRow; i++) {
 }
 
 ```
-
-**[【初心者向けGAS】for文を使ったスプレッドシートの繰り返しの超基本**初心者向けGoogle Apps Script超入門、GASプログラミングの基本を学んでいきます。今回は、for文を使った繰り返しの超基本。カウント変数、初期化式、条件式、増加式の意味と使い方です。tonari-it.com2018.03.20](https://tonari-it.com/gas-for/)
-
-![https://tonari-it.com/wp-content/uploads/repeat-1.jpg](https://tonari-it.com/wp-content/uploads/repeat-1.jpg)
-
-[https://www.google.com/s2/favicons?domain=tonari-it.com](https://www.google.com/s2/favicons?domain=tonari-it.com)
 
 ### **アクティブシートとシートの保護**
 
@@ -366,12 +322,6 @@ for(let i = 2; i <= lastRow; i++) {
 この際、ユーザーがシート名を変更しないように運用する必要があります。
 
 絶対に保護したい場合には、対象のシートを**非表示にしたり、シートを保護**することで、干渉を受けないようにすることができます。
-
-**[【初心者向けGAS】スプレッドシートのシートを取得する２つの方法**初心者向けのGoogle Apps Script入門シリーズとして、GASプログラミングの基礎をお伝えしています。今回は、スプレッドシートからシートを取得する２つの方法をお伝えします。tonari-it.com2018.03.18](https://tonari-it.com/gas-spreadsheet-get-sheet/)
-
-![https://tonari-it.com/wp-content/uploads/sheets-2.jpg](https://tonari-it.com/wp-content/uploads/sheets-2.jpg)
-
-[https://www.google.com/s2/favicons?domain=tonari-it.com](https://www.google.com/s2/favicons?domain=tonari-it.com)
 
 # **構造データの使用**
 
@@ -435,8 +385,6 @@ const sheet = SpreadsheetApp.getActiveSheet();
 
 **[Google Apps Scriptで配列を使ってスプレッドシートにデータ行を追加する方法**Google Apps Scriptでは配列操作が非常に重要です。実行速度が6分を超えてエラーとしないテクニックとして、スプレッドシートへのレコード追加を配列へのpushメソッドで処理する方法をお伝えします。tonari-it.com2017.02.27](https://tonari-it.com/gas-array-push-append/)
 
-![https://tonari-it.com/wp-content/uploads/push-2.jpg](https://tonari-it.com/wp-content/uploads/push-2.jpg)
-
 [https://www.google.com/s2/favicons?domain=tonari-it.com](https://www.google.com/s2/favicons?domain=tonari-it.com)
 
 範囲の指定が不要で、Sheetオブジェクトに直接実行できます。
@@ -467,17 +415,17 @@ const sheet = SpreadsheetApp.getActiveSheet();
 /** カスタムクラスは○○データを操作します */
 class CustomDate {
 
-  /** コンストラクタ
-		* @param{string} スプレッドシートid
-		* @param{string} シート名
-		*/
+ /** コンストラクタ
+   * @param{string} スプレッドシートid
+   * @param{string} シート名
+   */
   constructor(id,sheetName) {
     this.sheet = SpreadsheetApp.openById('id').getSheetByName('sheetName');
   }
 
   /** オリジナルデータを返すメソッド
-		* @return{Array} values
-		*/
+    * @return{Array} values
+    */
   getOriginalDate() {
 		//処理
     return values;
@@ -501,7 +449,7 @@ c.getOriginalDate();
 
 ## メソッドは純粋関数にする
 
-メソッドは、引数を受け取って、戻り値を返すのが正常なふるまいです。なので、メソッドの中では、戻り値を返す、以外のことは極力しないほうがいいです。
+メソッドは、引数を受け取って、戻り値を返すのが正常なふるまいです。なので、メソッドの中では、**戻り値を返す、以外のことは極力しない**ほうがいいです。
 
 たとえば、getOriginalDate()メソッドは、引数になにかを受け取り（引数が不要なばあいもあります。）、戻り値でvaluesや、objArrayを返すことを期待します。
 
@@ -512,11 +460,11 @@ c.getOriginalDate();
 メソッドを純粋関数にする理由は、メソッドを呼び出す側からしたら、**予測不能な動きをされる**と困るからです。
 
 ```jsx
-  getOriginalDate() {
-		//処理
-		console.log(values);
-		//処理    
-		return values;
+    getOriginalDate() {
+    //処理
+    console.log(values);
+    //処理    
+    return values;
   }
 ```
 
@@ -532,7 +480,7 @@ const values = c.getOriginalDate();
 ```jsx
  getOriginalDate() {
 
-		return values;
+   return values;
   }
 ```
 
@@ -540,12 +488,12 @@ const values = c.getOriginalDate();
 
 ```jsx
  getOriginalDate() {
-		const values = 'hoge';
-		return values;
+   const values = 'hoge';
+   return values;
   }
 ```
 
-このような順番で書くと、なにを書かなければならないのか、コードを書きながら整理できます。
+このような順番で書くと、なにを書かなければならないのか、**コードを書きながら整理**できます。
 
 ## 必要なものから表示する（不要なものは下に書く）
 
@@ -554,22 +502,22 @@ const values = c.getOriginalDate();
 逆に、外からは直接呼び出されない、**メソッドの中でしか呼ばれないメソッド**はプライベート関数化（メソッド名の後ろにアンダースコアを）します。
 
 ```jsx
-/** ソートされたValuesをメソッド
-	* @return {Array} values
-	*/ 
+/** ソートされたValuesを取得するメソッド
+  * @return {Array} values
+  */ 
 getOriginalDate() {
-		const values = 'hoge';
-		const sortValues = this.sortValues_();
-		return sortValues;
-  }
+  const values = 'hoge';
+  const sortValues = this.sortValues_();
+  return sortValues;
+ }
 
 /** ソートするメソッド
-	* @return {Array} values
-	*/
+  * @return {Array} values
+  */
 sortValues_(values){
-	//sort処理 values.sort();
-	return values
-	}
+  //sort処理 values.sort();
+  return values
+ }
 
 ```
 
@@ -577,7 +525,9 @@ sortValues_(values){
 
 ## テスト関数を作成する
 
-クラスを作成したら、クラスが正常に動くか、テスト関数を作成します。全てのプロパティとメソッドをテストする関数を書く必要はありませんが、重要なメンバーは、テスト関数を書いておくと、後で読む人（自分自身も含む）が助かります。
+クラスを作成したら、クラスが正常に動くか、テスト関数を作成します。
+
+全てのプロパティとメソッドをテストする関数を書く必要はありませんが、**重要なメンバーは、テスト関数を書いておく**と、後で読む人（自分自身も含む）が助かります。
 
 ### テスト関数の位置
 
@@ -636,6 +586,7 @@ function testCustomDate() {
 
 ### インスタンスの確認
 インスタンスは、必ず変数に代入しましょう。クラス名の先頭の小文字（1文字か、2文字）を使うことが多いです。
+
 インスタンスをコンソールログで確認すると、プロパティを確認できますが、目で確認してもしょうがないので、ここではインスタンスを生成するだけでもいいでしょう。
 
 ```jsx
@@ -650,6 +601,7 @@ console.log(cd);
 
 ### プロパティの確認
 クラスに必要なプロパティが決まっているなら、プロパティを確認するコードを書きます。
+
 この例でいくと、正しくプロパティを取得できているなら、スプレッドシートのシートオブジェクトを取得できているはずですので、このようなテストが可能です。
 
 ```jsx
@@ -665,8 +617,7 @@ if(sheet.getName() === '変更記録') console.log('プロパティは問題あ�
 ```
 
 ### メソッドの確認
-メソッドも同様に、戻り値をテストします。
-メソッドが純粋関数であれば、テストも楽です。
+メソッドも同様に、戻り値をテストします。メソッドが純粋関数であれば、テストも楽です。
 
 ```jsx
 /** テスト関数　*/
@@ -681,8 +632,8 @@ if(values[1][2] < values[2][2] < values[3][2]) console.log('ソートされて�
 このようなテスト関数を用意するということは、**テスト関数から書き始める**ということもできます。
 
 ### テスト駆動開発
+テスト関数から書き始める手法を **TDD（テスト駆動開発）** と呼びます。むずかしくありません。
 
-テスト関数から書き始める手法をTDD（テスト駆動開発）と呼びます。むずかしくありません。
 必要なメソッドや、クラスの構造がイメージできたら（作図をオススメします）、まず、テスト関数を言葉で書きます。
 
 ```jsx
@@ -727,9 +678,15 @@ if(sortValues[0][2] < sortValues[1][2] < sortValues[2][2]) {
 ```
 
 テスト関数が完成したら、クラスを書き始めます。
-テスト関数が問題なければ、クラスの中身はあまりとやかく言うものではありません。例えば、変数宣言のconst, letなど、社内ルールで統一するのは、むずかしいです。
-むしろ、そのような細かいミスの確認にコストを掛けるより、**テスト関数が正しく動いているか**、にチーム全員がフォーカスした方がいいでしょう。
-以上で、クラスを作り終わったら確認して欲しいことでした。「作り終わったら」と書きましたが、実はいちばん最初に読んで欲しいマニュアルになりました。
 
+テスト関数が問題なければ、クラスの中身はあまりとやかく言うものではありません。
+
+例えば、変数宣言のconst, letなど、社内ルールで統一するのは、むずかしいです。
+
+むしろ、そのような細かいミスの確認にコストを掛けるより、**テスト関数が正しく動いているか**、にチーム全員がフォーカスした方がいいでしょう。
+
+以上で、クラスを作り終わったら確認して欲しいことでした。
+
+「作り終わったら」と書きましたが、実はいちばん最初に読んで欲しいマニュアルになりました。
 
 # **まとめ**
