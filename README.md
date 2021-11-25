@@ -131,7 +131,7 @@ TGでは、スプレッドシートの行のデータを**record**と呼びま�
 
 グローバルスコープの定数、プロパティストアーのキーは**アルファベットのスネーク記法**で書きます。
 
-```
+```js
 const TAX_RATE = 1.08;
 const USER_ID = 'hogehoge';
 ```
@@ -180,7 +180,7 @@ GASでは自動でステートメントの末尾が判別されますが、判�
 
 新IDEになってから、オートフォーマットができるようになりました。インデントやスペースを自動で綺麗にしてくれる機能です。
 
-```
+```js
 functionmyFunction1() {
 for (let i = 1; i <= 10; i++) {
 if (i % 3 === 0 || i % 5 === 0) {
@@ -204,7 +204,7 @@ continue;
 
 例えば以下のようなパターン。
 
-```
+```js
 if (n > 50){ //nが50より大きい場合
   console.log('50より大きい');
 }elseif (n < 50){ //nが50より小さい場合
@@ -221,7 +221,7 @@ if (n > 50){ //nが50より大きい場合
 
 また、ドキュメンテーションコメントを入れることで、スプレッドシートで利用するカスタム関数使用時に、補完の候補としたり、詳細情報を表示したりできるので便利です。
 
-```
+```js
 /**
 * 指定した金額の税込価格を返すカスタム関数
 *
@@ -250,7 +250,7 @@ Ctrl + / で、現在カーソルのある行や**複数行の選択範囲を
 
 一方で、演算子「===」と「!==」は**左辺と右辺のデータ型が異なっていることを厳密に判断して比較**します。
 
-```
+```js
 functionmyFunction() {
   console.log(5 == '5'); //true
   console.log(5 === '5'); //false
@@ -286,7 +286,7 @@ functionmyFunction() {
 
 テーブルの走査をする場合には、getDataRangeメソッド、getValuesメソッドを用いて**データを二次元配列として取得**して操作することを優先します。
 
-```
+```js
 functionmyFunction() {
 const values = SpreadsheetApp.getActiveSheet().getDataRange().getValues();
 for(let i = 1; i < values.length; i++){
@@ -298,7 +298,7 @@ for(let i = 1; i < values.length; i++){
 
 **最終行**はgetLastRowメソッドで取得することができますが、配列での処理を優先しましょう。
 
-```
+```js
 functionmyFunction() {
 const sheet = SpreadsheetApp.getActiveSheet();
 const lastRow = sheet.getLastRow();
@@ -357,7 +357,7 @@ APIのアクセス回数を減らして、処理速度を少しでもあげま�
 
 スプレッドシートで複数のセルを取り扱う場合は**getValuesメソッド**、**setValuesメソッド**を使用して、配列を利用します。
 
-```
+```js
 functionmyFunction() {
 const sheet = SpreadsheetApp.getActiveSheet();
 const values = sheet.getDataRange().getValues();
@@ -375,7 +375,7 @@ const values = sheet.getDataRange().getValues();
 
 シートにレコードを追加する場合は、**appendRowメソッドを使うことで配列から直接レコードを追加**することができます。
 
-```
+```js
 functionmyFunction(){
 const sheet = SpreadsheetApp.getActiveSheet();
   sheet.appendRow(配列);
@@ -402,6 +402,15 @@ const sheet = SpreadsheetApp.getActiveSheet();
 また、グローバル領域で宣言した（**グローバル変数**）は全ての関数からアクセスすることができ、変更を加えることもできます。
 
 望まない影響を受ける可能性があるので、極力使わないようにしましょう。  
+
+# **for文は非推奨**
+TGでは、中級以降のスキルを求められます。
+
+for文でループしている処理があったら、map()やfilter()メソッドで代用できないか検討しましょう。
+
+格段にコードが短くなります。
+
+※要解説
 
 # **クラス**
 
